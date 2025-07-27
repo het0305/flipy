@@ -17,7 +17,7 @@
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   transition: 0.3s;
 }
 
@@ -52,4 +52,27 @@
 .book-author {
   font-size: 14px;
   color: #777;
+}
+
+/* --- Global Swap Button Styling --- */
+.swap-button-wrapper {
+  text-align: center;
+  margin: 30px 0 20px;
+}
+
+.swap-global-button {
+  background-color: #e67300;
+  color: #fff;
+  padding: 12px 28px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.3s ease;
+}
+
+.swap-global-button:hover {
+  background-color: #cc5c00;
 }

@@ -9,6 +9,7 @@ import Home from './Home';
 import AboutUs from './AboutUs';
 import ForgotPassword from './ForgotPassword';
 import NotFound from './NotFound';
+import SwapForm from './SwapForm';
 import './App.css';
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/swap" element={<SwapForm />} /> {/* ✅ Swap form route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

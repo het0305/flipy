@@ -1,0 +1,58 @@
+ .bookswap-container {
+  min-height: 100vh;
+  background-color: #fff6e5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.bookswap-title {
+  font-size: 2rem;
+  color: #e67300;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.book-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.book-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  width: 220px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+}
+
+.book-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.book-info {
+  padding: 16px;
+}
+
+.book-info h3 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.book-info p {
+  font-size: 14px;
+  color: #777;
+}

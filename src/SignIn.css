@@ -1,0 +1,107 @@
+/* SignIn.css */
+
+.login-container {
+  min-height: 100vh;
+  background-color: #fff6e5; /* soft peach background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+}
+
+.login-container form {
+  background-color: #ffffff; /* white card */
+  color: #333;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  max-width: 450px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-container h2 {
+  text-align: center;
+  color: #e67300; /* warm soft orange */
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.login-container input,
+.login-container textarea {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fffaf0;
+  color: #333;
+  font-size: 1rem;
+  transition: border 0.3s ease;
+}
+
+.login-container input:focus,
+.login-container textarea:focus {
+  border: 1px solid #e67300;
+  outline: none;
+  background-color: #ffffff;
+}
+
+.login-container button {
+  background-color: #e67300;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+  background-color: #cc5c00;
+}
+
+.extra-options {
+  text-align: center;
+  font-size: 0.95rem;
+  margin-top: 10px;
+}
+
+.extra-options a {
+  color: #e67300;
+  text-decoration: none;
+  font-weight: 500;
+  transition: text-decoration 0.2s ease;
+}
+
+.extra-options a:hover {
+  text-decoration: underline;
+}
+
+.forgot-link {
+  text-align: right;
+  margin-top: -10px;
+  margin-bottom: -10px;
+}
+
+.forgot-link a {
+  color: #e67300;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: text-decoration 0.2s ease;
+}
+
+.forgot-link a:hover {
+  text-decoration: underline;
+}
+
+.remember-me {
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+}

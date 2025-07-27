@@ -1,51 +1,98 @@
 // src/SignUp.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import './SignUp.css';
 
 function SignUp() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [agree, setAgree] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Simple validation (you can replace with API/backend logic)
-    if (email && password.length >= 6) {
-      alert('Sign Up Successful!');
-      navigate('/'); // redirect to home
-    } else {
-      alert('Please enter a valid email and password (min 6 characters).');
+    if (password !== confirmPassword) {
+      alert('Passwords do not match!');
+      return;
     }
+    if (!agree) {
+      alert('You must agree to the terms and conditions.');
+      return;
+    }
+
+    console.log('Name:', name);
+    console.log('Email:', email);
+    console.log('Mobile:', mobile);
+    console.log('Password:', password);
+
+    alert('Account created successfully!');
+    // TODO: integrate backend
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2 style={{ textAlign: 'center' }}>Sign Up</h2>
+    <div className="signup-container">
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
-          <label>Email:</label><br />
+        <h2>Sign Up</h2>
+
+        <input
+          type="text"
+          placeholder="Enter Your Full Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+
+        <input
+          type="email"
+          placeholder="Enter Your E-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <input
+          type="tel"
+          placeholder="+91 | Enter your number"
+          value={mobile}
+          onChange={(e) => setMobile(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Enter Your Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Confirm Your Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+
+        <div className="checkbox-field">
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="checkbox"
+            checked={agree}
+            onChange={(e) => setAgree(e.target.checked)}
             required
-            style={{ width: '100%', padding: '8px' }}
           />
+          <label style={{ marginLeft: '8px' }}>I agree to terms and condition</label>
         </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label>Password:</label><br />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: '100%', padding: '8px' }}
-          />
+
+        <button type="submit">Sign Up</button>
+
+        <div className="extra-options">
+          <p>
+            Already have an account? <Link to="/signin">Sign In</Link>
+          </p>
         </div>
-        <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#4CAF50', color: 'white', border: 'none' }}>
-          Sign Up
-        </button>
       </form>
     </div>
   );

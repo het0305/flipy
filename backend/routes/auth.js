@@ -45,7 +45,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// 🔐 Protected route (example)
 router.get("/dashboard", auth, (req, res) => {
   res.json({ msg: `Welcome ${req.user.email}` });
 });

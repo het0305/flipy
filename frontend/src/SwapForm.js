@@ -33,9 +33,26 @@ const SwapForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Swap Request Submitted!\n\nName: ${formData.name}\nEmail: ${formData.email}\nGiving: ${formData.giveBook}\nWants: ${formData.wantBook}`);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/swap', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (response.ok) {
+        alert('✅ Swap Request Submitted & Email Sent Successfully!');
+        setFormData({ name: '', email: '', giveBook: '', wantBook: '' });
+      } else {
+        alert('❌ Failed to send email. Try again.');
+      }
+    } catch (error) {
+      console.error('Email Error:', error);
+      alert('❌ Something went wrong. Please check backend.');
+    }
   };
 
   return (

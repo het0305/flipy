@@ -1,20 +1,10 @@
 {
-  "name": "practice",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/het0305/practice.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/het0305/practice/issues"
-  },
-  "homepage": "https://github.com/het0305/practice#readme",
-  "description": ""
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.5",
+    "react-icons": "^5.5.0"
+  }
 }

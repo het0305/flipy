@@ -1,4 +1,3 @@
-// src/SignUp.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -11,37 +10,37 @@ function SignUp() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agree, setAgree] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (password !== confirmPassword) {
-    alert("Passwords do not match!");
-    return;
-  }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
 
-  if (!agree) {
-    alert("You must agree to the terms and conditions.");
-    return;
-  }
+    if (!agree) {
+      alert("You must agree to the terms and conditions.");
+      return;
+    }
 
-  try {
-    const response = await axios.post("http://localhost:5000/api/register", {
-      name,
-      email,
-      mobile,
-      password,
-    });
+    try {
+      const response = await axios.post("http://localhost:5000/api/register", {
+        name,
+        email,
+        mobile,
+        password,
+      });
 
-    alert("Account created successfully!");
-    // Optionally redirect to sign in page
-    window.location.href = "/signin";
-  } catch (err) {
-    console.error("Signup error:", err.response?.data || err.message);
-    alert(err.response?.data?.msg || "Signup failed!");
-  }
-};
+      alert("Account created successfully!");
+      window.location.href = "/signin";
+    } catch (err) {
+      console.error("Signup error:", err.response?.data || err.message);
+      alert(err.response?.data?.msg || "Signup failed!");
+    }
+  };
 
   return (
     <div className="signup-container">
@@ -72,21 +71,37 @@ function SignUp() {
           required
         />
 
-        <input
-          type="password"
-          placeholder="Enter Your Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="password-field">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Enter Your Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <span
+            className="toggle-password"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? 'Hide' : 'Show'}
+          </span>
+        </div>
 
-        <input
-          type="password"
-          placeholder="Confirm Your Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
+        <div className="password-field">
+          <input
+            type={showConfirmPassword ? 'text' : 'password'}
+            placeholder="Confirm Your Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+          <span
+            className="toggle-password"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? 'Hide' : 'Show'}
+          </span>
+        </div>
 
         <div className="checkbox-field">
           <input
@@ -95,7 +110,7 @@ function SignUp() {
             onChange={(e) => setAgree(e.target.checked)}
             required
           />
-          <label style={{ marginLeft: '8px' }}>I agree to terms and condition</label>
+          <label>I agree to the terms and conditions</label>
         </div>
 
         <button type="submit">Sign Up</button>

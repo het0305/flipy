@@ -57,16 +57,11 @@
 /* Social Icons Section */
 .social-links {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.social-row {
-  display: flex;
+  flex-direction: row; /* Changed from column to row */
+  flex-wrap: wrap;
   gap: 16px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  align-items: center;
+  margin-top: 8px;
 }
 
 .social-icon {
@@ -89,10 +84,6 @@
   }
 
   .social-links {
-    align-items: center;
-  }
-
-  .social-row {
     justify-content: center;
   }
 }

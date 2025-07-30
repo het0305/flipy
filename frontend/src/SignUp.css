@@ -1,4 +1,4 @@
-/* src/SignUp.css */
+/* SignUp.css */
 .signup-container {
   min-height: 100vh;
   background-color: #fff6e5;
@@ -29,7 +29,10 @@
   margin-bottom: 10px;
 }
 
-.signup-container input {
+.signup-container input[type="text"],
+.signup-container input[type="email"],
+.signup-container input[type="tel"],
+.signup-container input[type="password"] {
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -37,6 +40,7 @@
   color: #333;
   font-size: 1rem;
   transition: border 0.3s ease;
+  width: 100%;
 }
 
 .signup-container input:focus {
@@ -45,10 +49,47 @@
   background-color: #ffffff;
 }
 
-.signup-container .checkbox-field {
+.password-field {
+  position: relative;
   display: flex;
   align-items: center;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 70px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  color: #e67300;
+  font-weight: 500;
+  user-select: none;
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 0.95rem;
+  margin-top: -10px;
+  margin-bottom: -5px;
+}
+
+.checkbox-field input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.checkbox-field label {
+  user-select: none;
+  color: #333;
 }
 
 .signup-container button {
@@ -80,7 +121,6 @@
   color: #e67300;
   text-decoration: none;
   font-weight: 500;
-  transition: text-decoration 0.2s ease;
 }
 
 .extra-options a:hover {

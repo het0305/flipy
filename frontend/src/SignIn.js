@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from './context/AuthContext'; // ✅ import Auth context
+import { useAuth } from './context/AuthContext';
 import './SignIn.css';
 
 function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const { login } = useAuth(); // ✅ use login function from context
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -22,12 +23,10 @@ function SignIn() {
       });
 
       const { token } = res.data;
-
-      login(token, remember); // ✅ update auth state
+      login(token, remember);
 
       alert('Login successful!');
-      navigate('/browse'); // ✅ redirect to private route
-
+      navigate('/browse');
     } catch (err) {
       console.error('Login error:', err.response?.data || err.message);
       alert(err.response?.data?.msg || 'Login failed!');
@@ -35,7 +34,7 @@ function SignIn() {
   };
 
   return (
-    <div className="login-container">
+    <div className="signin-container">
       <form onSubmit={handleLogin}>
         <h2>Sign In</h2>
 
@@ -47,26 +46,36 @@ function SignIn() {
           required
         />
 
-        <input
-          type="password"
-          placeholder="Enter Your Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <div className="forgot-link">
-          <Link to="/forgot-password">Forgot password?</Link>
+        <div className="password-field">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Enter Your Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            className="toggle-password"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? 'Hide' : 'Show'}
+          </button>
         </div>
 
-        <label className="remember-me">
+        <div className="checkbox-field">
           <input
             type="checkbox"
             checked={remember}
             onChange={(e) => setRemember(e.target.checked)}
+            id="remember"
           />
-          Remember Me
-        </label>
+          <label htmlFor="remember">Remember Me</label>
+        </div>
+
+        <div className="forgot-link">
+          <Link to="/forgot-password">Forgot password?</Link>
+        </div>
 
         <button type="submit">Sign In</button>
 

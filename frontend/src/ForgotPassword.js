@@ -84,7 +84,7 @@ function ForgotPassword() {
       {step === 4 && (
         <div>
           <h2>Password Reset Successful ✅</h2>
-          <p>You can now <a href="/signin">Login</a> with your new password.</p>
+          <p>You can now <a href="/signin">Sign In</a> with your new password.</p>
         </div>
       )}
     </div>

@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -9,7 +10,6 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// JWT Helper
+// ------------------ JWT Helper ------------------
 const createToken = (user) => {
   return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '2d' });
 };
@@ -53,6 +53,50 @@ const transporter2 = nodemailer.createTransport({
 
 // ------------------ OTP Store ------------------
 let otpStore = {}; // { email: otp }
+
+// ------------------ SignUp OTP ------------------
+
+// 1️⃣ Send OTP for SignUp
+app.post('/api/send-otp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ msg: "❗ Email is required" });
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) return res.status(409).json({ msg: "⚠️ Email already registered" });
+
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  otpStore[email] = otp;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER1,
+    to: email,
+    subject: "Flipy Email Verification OTP",
+    text: `Your OTP code is ${otp}. It will expire in 5 minutes.`,
+  };
+
+  try {
+    await transporter1.sendMail(mailOptions);
+    console.log(`✅ SignUp OTP sent to ${email}: ${otp}`);
+    res.status(200).json({ msg: "✅ OTP sent successfully!" });
+
+    // Auto-delete OTP after 5 minutes
+    setTimeout(() => delete otpStore[email], 5 * 60 * 1000);
+  } catch (err) {
+    console.error("❌ SignUp OTP error:", err.message);
+    res.status(500).json({ msg: "❌ Failed to send OTP" });
+  }
+});
+
+// 2️⃣ Verify OTP for SignUp
+app.post('/api/verify-otp', (req, res) => {
+  const { email, otp } = req.body;
+  if (otpStore[email] && otpStore[email] == otp) {
+    delete otpStore[email];
+    return res.json({ success: true, msg: "✅ OTP verified successfully!" });
+  } else {
+    return res.status(400).json({ success: false, msg: "❌ Invalid OTP" });
+  }
+});
 
 // ------------------ Register ------------------
 app.post('/api/register', async (req, res) => {
@@ -116,7 +160,7 @@ app.post('/api/forgot-password', async (req, res) => {
 
   try {
     await transporter1.sendMail(mailOptions);
-    console.log(`✅ OTP sent to ${email}: ${otp}`);
+    console.log(`✅ Forgot Password OTP sent to ${email}: ${otp}`);
     res.json({ msg: '✅ OTP sent to your email.' });
 
     setTimeout(() => delete otpStore[email], 5 * 60 * 1000);

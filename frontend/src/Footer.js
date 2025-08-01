@@ -38,6 +38,7 @@ const Footer = () => {
     </a>
   </div>
 </div>
+
       </div>
       <div className="footer-bottom">
         <p>&copy; 2025 Flipy. All rights reserved.</p>

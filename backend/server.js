@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -16,10 +15,7 @@ app.use(express.json());
 
 // ------------------ MongoDB Connection ------------------
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
@@ -35,18 +31,11 @@ const User = mongoose.model('User', userSchema);
 
 // JWT Helper
 const createToken = (user) => {
-  return jwt.sign(
-    { id: user._id, email: user.email },
-    process.env.JWT_SECRET,
-    { expiresIn: '2d' }
-  );
+  return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '2d' });
 };
 
-// ------------------ OTP Store ------------------
-let otpStore = {}; // { email: otp }
-
-// Setup Gmail Transporter
-const transporter = nodemailer.createTransport({
+// ------------------ Email Transporters ------------------
+const transporter1 = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER1,
@@ -54,61 +43,27 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// ------------------ Send OTP ------------------
-app.post('/api/send-otp', async (req, res) => {
-  const { email } = req.body;
-  if (!email) return res.status(400).json({ msg: "❗ Email is required" });
-
-  const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
-  otpStore[email] = otp;
-
-  const mailOptions = {
-    from: process.env.EMAIL_USER1,
-    to: email,
-    subject: "Flipy Email Verification Code",
-    text: `Your OTP code is ${otp}. It will expire in 5 minutes.`,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ msg: "✅ OTP sent successfully!" });
-
-    // Remove OTP after 5 mins
-    setTimeout(() => delete otpStore[email], 5 * 60 * 1000);
-  } catch (err) {
-    console.error("❌ OTP send error:", err.message);
-    res.status(500).json({ msg: "❌ Failed to send OTP" });
-  }
+const transporter2 = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER2,
+    pass: process.env.EMAIL_PASS2,
+  },
 });
 
-// ------------------ Verify OTP ------------------
-app.post('/api/verify-otp', (req, res) => {
-  const { email, otp } = req.body;
-  if (otpStore[email] && otpStore[email] == otp) {
-    delete otpStore[email];
-    return res.json({ success: true, msg: "✅ OTP verified successfully!" });
-  } else {
-    return res.status(400).json({ success: false, msg: "❌ Invalid OTP" });
-  }
-});
+// ------------------ OTP Store ------------------
+let otpStore = {}; // { email: otp }
 
 // ------------------ Register ------------------
 app.post('/api/register', async (req, res) => {
   const { name, email, mobile, password } = req.body;
-
-  if (!name || !email || !mobile || !password) {
-    return res.status(400).json({ msg: '❗ All fields are required.' });
-  }
+  if (!name || !email || !mobile || !password) return res.status(400).json({ msg: '❗ All fields required.' });
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({ msg: '⚠️ User already exists. Please sign in.' });
-    }
+    if (existingUser) return res.status(409).json({ msg: '⚠️ User already exists.' });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, mobile, password: hashedPassword });
     await newUser.save();
 
@@ -122,10 +77,7 @@ app.post('/api/register', async (req, res) => {
 // ------------------ Login ------------------
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ msg: '❗ Email and password required.' });
-  }
+  if (!email || !password) return res.status(400).json({ msg: '❗ Email and password required.' });
 
   try {
     const user = await User.findOne({ email });
@@ -136,31 +88,78 @@ app.post('/api/login', async (req, res) => {
 
     const token = createToken(user);
     res.status(200).json({ token });
-
   } catch (err) {
     console.error("❌ Login error:", err.message);
     res.status(500).json({ msg: '❌ Server error.' });
   }
 });
 
-// ------------------ Book Swap Email ------------------
-const transporter2 = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER2,
-    pass: process.env.EMAIL_PASS2,
-  },
+// ------------------ Forgot Password ------------------
+
+// 1️⃣ Send OTP
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ msg: '❗ Email is required' });
+
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ msg: '❌ User not found' });
+
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  otpStore[email] = otp;
+
+  const mailOptions = {
+    from: `"Flipy Support" <${process.env.EMAIL_USER1}>`,
+    to: email,
+    subject: '🔑 Password Reset OTP - Flipy',
+    text: `Your OTP for password reset is ${otp}. It is valid for 5 minutes.`,
+  };
+
+  try {
+    await transporter1.sendMail(mailOptions);
+    console.log(`✅ OTP sent to ${email}: ${otp}`);
+    res.json({ msg: '✅ OTP sent to your email.' });
+
+    setTimeout(() => delete otpStore[email], 5 * 60 * 1000);
+  } catch (err) {
+    console.error('❌ OTP send error:', err.message);
+    res.status(500).json({ msg: '❌ Failed to send OTP' });
+  }
 });
 
+// 2️⃣ Verify OTP
+app.post('/api/forgot-password/verify', (req, res) => {
+  const { email, otp } = req.body;
+  if (otpStore[email] && otpStore[email] == otp) {
+    return res.json({ success: true, msg: '✅ OTP verified' });
+  } else {
+    return res.status(400).json({ success: false, msg: '❌ Invalid OTP' });
+  }
+});
+
+// 3️⃣ Reset Password
+app.post('/api/forgot-password/reset', async (req, res) => {
+  const { email, newPassword } = req.body;
+  if (!email || !newPassword) return res.status(400).json({ msg: '❗ Missing fields' });
+
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.updateOne({ email }, { password: hashedPassword });
+
+    delete otpStore[email];
+    res.json({ msg: '✅ Password updated successfully!' });
+  } catch (err) {
+    console.error('❌ Password reset error:', err.message);
+    res.status(500).json({ msg: '❌ Failed to reset password' });
+  }
+});
+
+// ------------------ Book Swap Email ------------------
 app.post('/api/swap', async (req, res) => {
   const { name, email, giveBook, wantBook } = req.body;
-
-  if (!name || !email || !giveBook || !wantBook) {
-    return res.status(400).json({ message: '❗ All fields are required.' });
-  }
+  if (!name || !email || !giveBook || !wantBook) return res.status(400).json({ message: '❗ All fields required.' });
 
   const useFirst = Math.random() < 0.5;
-  const selectedTransporter = useFirst ? transporter : transporter2;
+  const transporter = useFirst ? transporter1 : transporter2;
   const receiverEmail = useFirst ? process.env.EMAIL_USER1 : process.env.EMAIL_USER2;
 
   const mailOptions = {
@@ -178,7 +177,7 @@ app.post('/api/swap', async (req, res) => {
   };
 
   try {
-    await selectedTransporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
     res.status(200).json({ message: `✅ Email sent successfully via ${receiverEmail}` });
   } catch (err) {
     console.error(`❌ Email failed:`, err.message);

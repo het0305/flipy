@@ -4,26 +4,69 @@ import { Link } from 'react-router-dom';
 import './Browse.css';
 
 const books = [
-  { title: 'Bhagavad Gita', author: 'Vyasa', image: '/images/bhagavad-gita.webp' },
-  { title: 'Ramayana', author: 'Valmiki', image: '/images/ramayana.jpg' },
-  { title: 'Mahabharata', author: 'Vyasa', image: '/images/mahabharata.jpg' },
-  { title: 'Rigveda', author: 'Ancient Rishis', image: '/images/rigveda.jpg' },
-  { title: 'Samaveda', author: 'Ancient Rishis', image: '/images/samaveda.jpg' },
-  { title: 'Yajurveda', author: 'Ancient Rishis', image: '/images/yajurveda.jpg' },
-  { title: 'Atharvaveda', author: 'Ancient Rishis', image: '/images/atharvaveda.jpg' },
-  { title: 'Upanishads', author: 'Various Sages', image: '/images/upanishads.jpg' },
-  { title: 'Srimad Bhagavatam', author: 'Vyasa', image: '/images/srimad-bhagavatam.jpg' },
-  { title: 'Shiva Purana', author: 'Vyasa', image: '/images/shiva-purana.jpg' },
-  { title: 'Vishnu Purana', author: 'Vyasa', image: '/images/vishnu-purana.jpg' },
-  { title: 'Devi Bhagavata Purana', author: 'Vyasa', image: '/images/devi-bhagavata.jpg' }
+  {
+    title: 'Bhagavad Gita',
+    author: 'Vyasa',
+    image: '/images/bhagavad-gita.webp'
+  },
+  {
+    title: 'Ramayana',
+    author: 'Valmiki',
+    image: '/images/ramayana.jpg'
+  },
+  {
+    title: 'Mahabharata',
+    author: 'Vyasa',
+    image: '/images/mahabharata.jpg'
+  },
+  {
+    title: 'Rigveda',
+    author: 'Ancient Rishis',
+    image: '/images/rigveda.jpg'
+  },
+  {
+    title: 'Samaveda',
+    author: 'Ancient Rishis',
+    image: '/images/samaveda.jpg'
+  },
+  {
+    title: 'Yajurveda',
+    author: 'Ancient Rishis',
+    image: '/images/yajurveda.jpg'
+  },
+  {
+    title: 'Atharvaveda',
+    author: 'Ancient Rishis',
+    image: '/images/atharvaveda.jpg'
+  },
+  {
+    title: 'Upanishads',
+    author: 'Various Sages',
+    image: '/images/upanishads.jpg'
+  },
+  {
+    title: 'Srimad Bhagavatam',
+    author: 'Vyasa',
+    image: '/images/srimad-bhagavatam.jpg'
+  },
+  {
+    title: 'Shiva Purana',
+    author: 'Vyasa',
+    image: '/images/shiva-purana.jpg'
+  },
+  {
+    title: 'Vishnu Purana',
+    author: 'Vyasa',
+    image: '/images/vishnu-purana.jpg'
+  },
+  {
+    title: 'Devi Bhagavata Purana',
+    author: 'Vyasa',
+    image: '/images/devi-bhagavata.jpg'
+  }
 ];
 
 const Browse = () => {
-  // Handle Interest Button
-  const handleInterested = (book) => {
-    alert(`You showed interest in: "${book.title}" by ${book.author}`);
-  };
-
   return (
     <div className="browse-container">
       <br /><h2>Browse Hindu Literature Books</h2><br />
@@ -36,14 +79,6 @@ const Browse = () => {
             <div className="info-section">
               <div className="book-title">{book.title}</div>
               <div className="book-author">by {book.author}</div>
-
-              {/* Interested Button */}
-              <button 
-                className="interested-button"
-                onClick={() => handleInterested(book)}
-              >
-                Interested
-              </button>
             </div>
           </div>
         ))}

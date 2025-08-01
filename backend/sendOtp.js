@@ -8,6 +8,7 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER1,  // Your Gmail
     pass: process.env.EMAIL_PASS1,  // App password
   },
+
 });
 
 let otpStore = {}; // { email: otp }

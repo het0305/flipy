@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection
+// ------------------ MongoDB Connection ------------------
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -23,7 +23,7 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Mongoose User Schema
+// ------------------ User Schema ------------------
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// 🔐 JWT Helper
+// JWT Helper
 const createToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email },
@@ -42,7 +42,57 @@ const createToken = (user) => {
   );
 };
 
-// ✅ Route: Register
+// ------------------ OTP Store ------------------
+let otpStore = {}; // { email: otp }
+
+// Setup Gmail Transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER1,
+    pass: process.env.EMAIL_PASS1,
+  },
+});
+
+// ------------------ Send OTP ------------------
+app.post('/api/send-otp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ msg: "❗ Email is required" });
+
+  const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
+  otpStore[email] = otp;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER1,
+    to: email,
+    subject: "Flipy Email Verification Code",
+    text: `Your OTP code is ${otp}. It will expire in 5 minutes.`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ msg: "✅ OTP sent successfully!" });
+
+    // Remove OTP after 5 mins
+    setTimeout(() => delete otpStore[email], 5 * 60 * 1000);
+  } catch (err) {
+    console.error("❌ OTP send error:", err.message);
+    res.status(500).json({ msg: "❌ Failed to send OTP" });
+  }
+});
+
+// ------------------ Verify OTP ------------------
+app.post('/api/verify-otp', (req, res) => {
+  const { email, otp } = req.body;
+  if (otpStore[email] && otpStore[email] == otp) {
+    delete otpStore[email];
+    return res.json({ success: true, msg: "✅ OTP verified successfully!" });
+  } else {
+    return res.status(400).json({ success: false, msg: "❌ Invalid OTP" });
+  }
+});
+
+// ------------------ Register ------------------
 app.post('/api/register', async (req, res) => {
   const { name, email, mobile, password } = req.body;
 
@@ -69,7 +119,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// ✅ Route: Login
+// ------------------ Login ------------------
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -93,15 +143,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// 📧 Setup Email Transporters
-const transporter1 = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER1,
-    pass: process.env.EMAIL_PASS1,
-  },
-});
-
+// ------------------ Book Swap Email ------------------
 const transporter2 = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -110,7 +152,6 @@ const transporter2 = nodemailer.createTransport({
   },
 });
 
-// 📚 Route: Book Swap Request Email
 app.post('/api/swap', async (req, res) => {
   const { name, email, giveBook, wantBook } = req.body;
 
@@ -119,7 +160,7 @@ app.post('/api/swap', async (req, res) => {
   }
 
   const useFirst = Math.random() < 0.5;
-  const transporter = useFirst ? transporter1 : transporter2;
+  const selectedTransporter = useFirst ? transporter : transporter2;
   const receiverEmail = useFirst ? process.env.EMAIL_USER1 : process.env.EMAIL_USER2;
 
   const mailOptions = {
@@ -137,7 +178,7 @@ app.post('/api/swap', async (req, res) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    await selectedTransporter.sendMail(mailOptions);
     res.status(200).json({ message: `✅ Email sent successfully via ${receiverEmail}` });
   } catch (err) {
     console.error(`❌ Email failed:`, err.message);
@@ -145,7 +186,7 @@ app.post('/api/swap', async (req, res) => {
   }
 });
 
-// 🚀 Start Server
+// ------------------ Start Server ------------------
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

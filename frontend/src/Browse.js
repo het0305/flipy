@@ -69,7 +69,7 @@ const books = [
 const Browse = () => {
   return (
     <div className="browse-container">
-      <h2>Browse Hindu Literature Books</h2>
+      <br /><h2>Browse Hindu Literature Books</h2><br />
       <div className="book-grid">
         {books.map((book, index) => (
           <div key={index} className="book-card">

@@ -17,7 +17,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import LogoutButton from "./components/LogoutButton";
 import { useAuth } from "./context/AuthContext";
 
-import Footer from "./Footer"; // ✅ Moved here from components
+import Footer from "./Footer"; 
 import "./App.css";
 
 function App() {

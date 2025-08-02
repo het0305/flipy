@@ -5,16 +5,29 @@
   padding: 80px 20px 40px;
   font-family: 'Poppins', sans-serif;
   color: #333;
+  overflow-x: hidden;
 }
 
+/* --- Header Section --- */
 .about-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 60px;
+  animation: fadeDown 1s ease forwards;
 }
 
 .about-header h1 {
   font-size: 3rem;
   color: #e67300;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 10px;
+  transition: text-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.about-header h1:hover {
+  text-shadow: 0 0 10px rgba(230, 115, 0, 0.7),
+               0 0 20px rgba(230, 115, 0, 0.5);
 }
 
 .about-header p {
@@ -22,25 +35,56 @@
   color: #555;
   max-width: 700px;
   margin: 10px auto 0;
+  line-height: 1.6;
 }
 
+/* --- About Content Sections --- */
 .about-content {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .about-section {
   background-color: #fff;
-  padding: 30px;
-  border-radius: 12px;
-  margin-bottom: 30px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeUp 0.9s ease forwards;
+  opacity: 0;
+}
+
+.about-section:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
 .about-section h2 {
   color: #e67300;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  font-size: 1.8rem;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.about-section h2::after {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 3px;
+  background: #e67300;
+  bottom: 0;
+  left: 0;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.about-section:hover h2::after {
+  width: 100px;
 }
 
 .about-section p,
@@ -52,8 +96,42 @@
 
 .about-section ul {
   padding-left: 20px;
+  margin-top: 10px;
 }
 
 .about-section li {
   margin-bottom: 10px;
+  position: relative;
+  padding-left: 20px;
+}
+
+.about-section li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #e67300;
+  font-weight: bold;
+}
+
+/* --- Animations --- */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

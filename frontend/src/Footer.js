@@ -13,13 +13,13 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-section">
           <h4>Created By</h4>
-          <p>Prashant Malaviya</p>
           <p>Het Patel</p>
+          <p>Prashant Malaviya</p>
         </div>
         <div className="footer-section">
           <h4>Email Ids</h4>
-          <p>malaviyaprashant4050@gmail.com</p>
           <p>hetpatell0305@gmail.com</p>
+          <p>malaviyaprashant4050@gmail.com</p>
         </div>
         <div className="footer-section">
   <h4>Follow Us</h4>

@@ -22,7 +22,7 @@ function ForgotPassword() {
       setMessage(error.response?.data?.msg || 'Error sending OTP');
     }
   };
-
+                
   // Step 2: Verify OTP
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
